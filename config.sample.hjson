@@ -1,0 +1,17 @@
+{
+    database: {
+        user: DATABASE_USER
+        host: DATABASE_HOST
+        name: DATABASE_NAME
+        passowrd: DATABASE_PASSWORD
+    }
+    currecy: {
+        collecting: {
+            fiat: true
+            crypto: false
+        }
+        fiat: [USD, RUB, EUR, UAH, TRY, KZT, CNY]
+        crypto: [ETH, BTC, USDT, TON]
+    }
+    schedule: 30 8 * * *
+}
