@@ -1,0 +1,10 @@
+# code editor
+.idea
+
+# config files
+config.hjson
+.env
+
+node_modules/
+
+.DS_Store
