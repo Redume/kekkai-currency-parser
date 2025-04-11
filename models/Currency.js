@@ -28,7 +28,8 @@ async function validateCurrency(data) {
         const validatedData = await currencySchema.validateAsync(data);
         return validatedData;
     } catch (error) {
-        throw new Error(`Validation error \n${JSON.stringify(error.details[0], null, '\t')}`);
+        const errorMessages = error.details.map(e => e.message).join('; ');
+        throw new Error(`Validation error(s): ${errorMessages}`);
     }
 }
 
