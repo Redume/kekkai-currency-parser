@@ -4,6 +4,8 @@ const hjson = require('hjson');
 const schedule = require('node-schedule');
 const cron = require('cron-validator');
 
+const { validateCurrency } = require('./models/Currency.js');
+const { create_table, pool } = require('./database/data.js');
 const config = hjson.parse(fs.readFileSync('config.hjson', 'utf-8'));
 
 async function main() {
@@ -21,13 +23,12 @@ async function main() {
         const filePath = path.join(servicesDir, file);
         const moduleLoaded = require(filePath);
 
-
-        if (typeof moduleLoaded.parseCurrencies === 'function') {
+        if (typeof moduleLoaded.parseCurrencies === 'function') 
             services.push(moduleLoaded);
-        }
     }
 
     console.log('Loaded parser services:', serviceFiles);
+    await create_table();
 
     schedule.scheduleJob(config['schedule'], async () => {
         console.log('Running scheduled task at:', new Date());
@@ -35,8 +36,24 @@ async function main() {
         for (const srv of services) {
             try {
                 const result = await srv.parseCurrencies();
-                if (result)
-                    console.log(`Result from ${srv.name || 'someService'}:`, result);
+  
+                if (result) {
+                    try {
+                        const currency = await validateCurrency(result);
+
+                        await pool.query(
+                            'INSERT INTO currency (from_currency, conv_currency, rate, date) ' +
+                            'VALUES ($1, $2, $3, $4)', 
+                            [
+                                currency.from_currency,
+                                currency.conv_currency,
+                                currency.rate,
+                                currency.date,
+                            ]);
+                    } catch (validationError) {
+                        console.error(validationError);
+                    }
+                }
             } catch (err) {
                 console.error(`Error in service ${srv.name || 'unknown'}:`, err);
             }
