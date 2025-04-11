@@ -1,8 +1,6 @@
 const pg = require('pg');
 const fs = require('fs');
-const hjson = require('hjson');
-
-const config = hjson.parse(fs.readFileSync('config.hjson', 'utf-8'));
+const config = require('../utils/load_config.js')();
 
 const pool = new pg.Pool({
   user: config['database']['user'],

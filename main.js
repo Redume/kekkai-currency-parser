@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
-const hjson = require('hjson');
 const schedule = require('node-schedule');
 const cron = require('cron-validator');
 
 const { validateCurrency } = require('./models/Currency.js');
 const { create_table, pool } = require('./database/data.js');
-const config = hjson.parse(fs.readFileSync('config.hjson', 'utf-8'));
+const config = require('./utils/load_config.js')();
 
 async function main() {
     if (!config['schedule']) 
