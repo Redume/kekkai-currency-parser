@@ -33,29 +33,29 @@ async function main() {
         console.log('Running scheduled task at:', new Date());
 
         for (const srv of services) {
-            try {
-                const result = await srv.parseCurrencies();
-  
-                if (result) {
+            const results = await srv.parseCurrencies();
+
+            if (Array.isArray(results) && results.length > 0) {
+                for (const result of results) {
                     try {
                         const currency = await validateCurrency(result);
-
+            
                         await pool.query(
-                            'INSERT INTO currency (from_currency, conv_currency, rate, date) ' +
-                            'VALUES ($1, $2, $3, $4)', 
+                            'INSERT INTO currency (from_currency, conv_currency, rate, date) VALUES ($1, $2, $3, $4)', 
                             [
                                 currency.from_currency,
                                 currency.conv_currency,
                                 currency.rate,
                                 currency.date,
-                            ]);
+                            ]
+                        );
                     } catch (validationError) {
                         console.error(validationError);
                     }
                 }
-            } catch (err) {
-                console.error(`Error in service ${srv.name || 'unknown'}:`, err);
-            }
+            } else {
+                console.error("Data not received for writing to the database.");
+            }            
         }
     });
 
