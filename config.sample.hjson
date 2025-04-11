@@ -10,8 +10,23 @@
             fiat: true
             crypto: false
         }
-        fiat: [USD, RUB, EUR, UAH, TRY, KZT, CNY]
-        crypto: [ETH, BTC, USDT, TON]
+        fiat:
+        [
+            USD,
+            RUB,
+            EUR,
+            UAH,
+            TRY,
+            KZT,
+            CNY
+        ]
+        crypto:
+        [
+            ETH,
+            BTC,
+            USDT,
+            TON
+        ]
     }
     schedule: 30 8 * * *
 }
