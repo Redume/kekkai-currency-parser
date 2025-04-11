@@ -3,7 +3,7 @@
         user: DATABASE_USER
         host: DATABASE_HOST
         name: DATABASE_NAME
-        passowrd: DATABASE_PASSWORD
+        password: DATABASE_PASSWORD
     }
     currecy: {
         collecting: {
