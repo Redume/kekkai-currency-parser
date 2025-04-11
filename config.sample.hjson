@@ -27,6 +27,9 @@
             USDT,
             TON
         ]
+        api_keys: {
+            coinmarketcap: TOKEN_COINMARKETCAP
+        }
     }
     schedule: 30 8 * * *
 }
