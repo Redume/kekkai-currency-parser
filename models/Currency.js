@@ -1,14 +1,16 @@
 const Joi = require('joi');
 
 const currencySchema = Joi.object({
-    from_currency: Joi.string().length(3).required().messages({
+    from_currency: Joi.string().min(3).max(4).required().messages({
         'string.base': 'from_currency must be a string',
-        'string.length': 'from_currency must be exactly 3 characters long',
+        'string.min': 'from_currency must be at least 3 characters long',
+        'string.max': 'from_currency must be no more than 4 characters long',
         'any.required': 'from_currency is required'
     }),
-    conv_currency: Joi.string().length(3).required().messages({
+    conv_currency: Joi.string().min(3).max(4).required().messages({
         'string.base': 'conv_currency must be a string',
-        'string.length': 'conv_currency must be exactly 3 characters long',
+        'string.min': 'conv_currency must be at least 3 characters long',
+        'string.max': 'conv_currency must be no more than 4 characters long',
         'any.required': 'conv_currency is required'
     }),
     date: Joi.date().iso().required().messages({
