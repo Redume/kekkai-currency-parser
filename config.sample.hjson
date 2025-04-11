@@ -5,7 +5,7 @@
         name: DATABASE_NAME
         password: DATABASE_PASSWORD
     }
-    currecy: {
+    currency: {
         collecting: {
             fiat: true
             crypto: false
