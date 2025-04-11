@@ -8,3 +8,4 @@ config.hjson
 node_modules/
 
 .DS_Store
+postgres-data/
