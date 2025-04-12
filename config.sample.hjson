@@ -6,10 +6,6 @@
         password: DATABASE_PASSWORD
     }
     currency: {
-        collecting: {
-            fiat: true
-            crypto: false
-        }
         services: {
             enabled: [
                 'coinmarketcap'
