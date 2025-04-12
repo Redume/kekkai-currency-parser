@@ -3,12 +3,16 @@ const config = require('../utils/load_config.js')();
 const { truncate_number } = require('../utils/truncate_number.js');
 
 module.exports = {
+    info: {
+        name: 'CoinMarketCap',
+    },
     parseCurrencies: async () => {
         const promises = config['currency']['crypto'].map(fromCurrency => {
             return config['currency']['crypto'].map(convCurrency => {
                 if (fromCurrency === convCurrency) return Promise.resolve(null);
 
                 const coinmarketcap = config['currency']['services']['coinmarketcap'];
+                const serviceName = module.exports.info.name;
 
                 return axios.get(
                     coinmarketcap['base_url'],
@@ -27,7 +31,7 @@ module.exports = {
                     const truncatedPriceStr = truncate_number(data.price, 3);
                     const rate = parseFloat(truncatedPriceStr);
 
-                    console.log(`Data fetched from CoinMarketCap: ${fromCurrency} -> ${convCurrency}, Rate: ${rate}`);
+                    console.log(`Data fetched from ${serviceName}: ${fromCurrency} -> ${convCurrency}, Rate: ${rate}`);
 
                     return {
                         from_currency: fromCurrency,
