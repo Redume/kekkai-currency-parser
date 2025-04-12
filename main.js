@@ -38,6 +38,8 @@ async function main() {
             const results = await srv.parseCurrencies();
 
             if (Array.isArray(results) && results.length > 0) {
+                console.log(`Data received from ${srv.name || 'unknown service'}:`, results.length, 'items');
+
                 for (const result of results) {
                     try {
                         const currency = await validateCurrency(result);
@@ -51,7 +53,9 @@ async function main() {
                                 currency.date,
                             ]
                         );
+                        console.log(`Inserted data for ${currency.from_currency} -> ${currency.conv_currency}, Rate: ${currency.rate}`);
                     } catch (validationError) {
+                        console.error('Validation failed for data:', result);
                         console.error(validationError);
                     }
                 }

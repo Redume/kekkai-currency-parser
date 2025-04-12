@@ -27,6 +27,8 @@ module.exports = {
                     const truncatedPriceStr = truncate_number(data.price, 3);
                     const rate = parseFloat(truncatedPriceStr);
 
+                    console.log(`Data fetched from CoinMarketCap: ${fromCurrency} -> ${convCurrency}, Rate: ${rate}`);
+
                     return {
                         from_currency: fromCurrency,
                         conv_currency: convCurrency,
