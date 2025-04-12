@@ -38,7 +38,7 @@ async function main() {
             const results = await srv.parseCurrencies();
 
             if (Array.isArray(results) && results.length > 0) {
-                console.log(`Data received from ${srv.name || 'unknown service'}:`, results.length, 'items');
+                console.log(`Data received from ${srv.info.name || 'unknown service'}:`, results.length, 'items');
 
                 for (const result of results) {
                     try {
