@@ -8,15 +8,17 @@ module.exports = {
             return config['currency']['crypto'].map(convCurrency => {
                 if (fromCurrency === convCurrency) return Promise.resolve(null);
 
+                const coinmarketcap = config['currency']['services']['coinmarketcap'];
+
                 return axios.get(
-                    'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
+                    coinmarketcap['base_url'],
                     {
                         params: {
                             symbol: fromCurrency,
                             convert: convCurrency,
                         },
                         headers: {
-                            'X-CMC_PRO_API_KEY': config['currency']['api_keys']['coinmarketcap'],
+                            'X-CMC_PRO_API_KEY': coinmarketcap['api_key'],
                         }
                     }
                 )
@@ -33,7 +35,7 @@ module.exports = {
                     };
                 })
                 .catch((err) => {
-                    console.error(err.respone.data);
+                    console.error(err);
                     return null;
                 });
             });

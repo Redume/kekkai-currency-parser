@@ -10,6 +10,15 @@
             fiat: true
             crypto: false
         }
+        services: {
+            enabled: [
+                'coinmarketcap'
+            ]
+            coinmarketcap: {
+                "api_key": TOKEN_COINMARKETCAP"
+                "base_url": https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest
+            }
+        }
         fiat:
         [
             USD,

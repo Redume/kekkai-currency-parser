@@ -7,26 +7,28 @@ const { validateCurrency } = require('./models/Currency.js');
 const { create_table, pool } = require('./database/data.js');
 const config = require('./utils/load_config.js')();
 
+const services = [];
+const servicesDir = path.join(__dirname, 'services');
+
 async function main() {
     if (!config['schedule']) 
         throw new Error('The crontab schedule is not set.');
     else if (!cron.isValidCron(config['schedule'], { alias: true })) 
         throw new Error('The crontab is invalid.');
-    
-    const servicesDir = path.join(__dirname, 'services');
-    const serviceFiles = fs.readdirSync(servicesDir)
-        .filter(filename => filename.endsWith('.js'));
 
-    const services = [];
-    for (const file of serviceFiles) {
-        const filePath = path.join(servicesDir, file);
-        const moduleLoaded = require(filePath);
+    console.log('Loading services...');
+    config['currency']['services']['enabled'].forEach(serviceName => {
+        const servicePath = path.join(servicesDir, `${serviceName}.js`);
+        if (fs.existsSync(servicePath)) {
+            const serviceModule = require(servicePath);
 
-        if (typeof moduleLoaded.parseCurrencies === 'function') 
-            services.push(moduleLoaded);
-    }
+            services.push(serviceModule);
+            console.log(`Service ${serviceName} loaded successfully`);
+        } else {
+            console.error(`Service file for ${serviceName} not found at ${servicePath}`);
+        }
+    });
 
-    console.log('Loaded parser services:', serviceFiles);
     await create_table();
 
     schedule.scheduleJob(config['schedule'], async () => {
