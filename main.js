@@ -10,6 +10,9 @@ const config = require('./utils/load_config.js')();
 const services = [];
 const servicesDir = path.join(__dirname, 'services');
 
+let fiatFetched = false;
+let cryptoFetched = false;
+
 async function main() {
     if (!config['schedule']) 
         throw new Error('The crontab schedule is not set.');
@@ -34,6 +37,9 @@ async function main() {
     schedule.scheduleJob(config['schedule'], async () => {
         console.log('Running scheduled task at:', new Date());
 
+        fiatFetched = false;
+        cryptoFetched = false;
+
         for (const srv of services) {
             const results = await srv.parseCurrencies();
 
@@ -42,6 +48,16 @@ async function main() {
 
                 for (const result of results) {
                     try {
+                        if (srv.info.type === 'fiat' && fiatFetched) {
+                            console.log('Skipping fiat currency collection as data has already been fetched.');
+                            continue;
+                        }
+
+                        if (srv.info.type === 'crypto' && cryptoFetched) {
+                            console.log('Skipping crypto currency collection as data has already been fetched.');
+                            continue;
+                        }
+
                         const currency = await validateCurrency(result);
             
                         await pool.query(
@@ -59,6 +75,16 @@ async function main() {
                         console.error(validationError);
                     }
                 }
+
+                if (srv.info.type === 'crypto') {
+                    cryptoFetched = true;
+                    console.log('Crypto currency data fetched successfully.');
+                }
+
+                if (srv.info.type === 'fiat') {
+                    fiatFetched = true;
+                    console.log('Fiat currency data fetched successfully.');
+                } 
             } else {
                 console.error("Data not received for writing to the database.");
             }            
