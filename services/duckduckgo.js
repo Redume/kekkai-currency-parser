@@ -5,6 +5,7 @@ const { truncate_number } = require('../utils/truncate_number.js');
 module.exports = {
     info: {
         name: 'DuckDuckGo',
+        type: 'fiat'
     },
     parseCurrencies: async () => {
         const promises = config['currency']['fiat'].map(fromCurrency => {
